@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Wellnest | Visit Tracker</title>
+<title>Wellnest | Field Tracker</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
@@ -21,101 +21,108 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1e1118; --bg2: #271520; --bg3: #311b28;
-    --bg-info: #0c2a45; --bg-success: #122a10; --bg-warning: #3a2008; --bg-danger: #3a1010;
-    --text: #f0e8ec; --text2: #c4a0b5; --text3: #8a6878;
-    --text-info: #7ab8e8; --text-success: #80c87a; --text-warning: #e8b050; --text-danger: #e88080;
-    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.16);
-    --plum: #c8922a; --plum-lt: #e8b050;
-    --gold: #c8922a; --gold-lt: #e8c070;
-    --cream: #1e1118; --cream2: #271520; --cream3: #311b28;
+    --bg:#1e1118;--bg2:#271520;--bg3:#311b28;
+    --bg-info:#0c2a45;--bg-success:#122a10;--bg-warning:#3a2008;--bg-danger:#3a1010;
+    --text:#f0e8ec;--text2:#c4a0b5;--text3:#8a6878;
+    --text-info:#7ab8e8;--text-success:#80c87a;--text-warning:#e8b050;--text-danger:#e88080;
+    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.16);
+    --plum:#c8922a;--plum-lt:#e8b050;--gold:#c8922a;--gold-lt:#e8c070;
+    --cream:#1e1118;--cream2:#271520;--cream3:#311b28;
   }
 }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg2); color: var(--text); min-height: 100vh; display: flex; justify-content: center; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg2); color: var(--text); min-height: 100vh; display: flex; justify-content: center; }
 .shell { width: 100%; max-width: 460px; min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
 
-/* top bar */
-.topbar { background: var(--plum); border-bottom: none; padding: 14px 16px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 10; }
-.topbar-back { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.8); font-size: 22px; padding: 0; line-height: 1; display: none; }
-.topbar-back:hover { color: #fff; }
-.topbar-logo { font-family: Georgia, serif; font-size: 15px; font-weight: 700; color: var(--gold-lt); letter-spacing: 0; }
-.topbar-title { font-size: 15px; font-weight: 500; color: #fff; flex: 1; }
-.topbar-rep { font-size: 12px; color: #fff; background: rgba(255,255,255,0.15); padding: 3px 9px; border-radius: 20px; border: 0.5px solid rgba(255,255,255,0.25); }
+/* topbar */
+.topbar { background: var(--plum); padding: 14px 16px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 10; }
+.tb-back { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.8); font-size: 22px; padding: 0; line-height: 1; display: none; }
+.tb-logo { font-family: Georgia, serif; font-size: 15px; font-weight: 700; color: var(--gold-lt); }
+.tb-title { font-size: 15px; font-weight: 500; color: #fff; flex: 1; }
+.tb-rep { font-size: 12px; color: #fff; background: rgba(255,255,255,0.15); padding: 3px 9px; border-radius: 20px; display: none; }
+
 .content { flex: 1; padding: 16px; overflow-y: auto; }
 .screen { display: none; }
 .screen.active { display: block; }
 
-/* loading */
-.loading-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 0; gap: 12px; }
-.spinner { width: 28px; height: 28px; border: 2.5px solid var(--cream3); border-top-color: var(--plum); border-radius: 50%; animation: spin 0.7s linear infinite; }
+/* spinner */
+.spinner-wrap { display: flex; flex-direction: column; align-items: center; padding: 3rem 0; gap: 10px; }
+.spinner { width: 26px; height: 26px; border: 2.5px solid var(--cream3); border-top-color: var(--plum); border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading-wrap p { font-size: 13px; color: var(--text2); }
+.spinner-wrap p { font-size: 13px; color: var(--text2); }
 
 /* rep select */
 .rep-hero { text-align: center; padding: 2rem 0 1.5rem; }
-.rep-hero .wn-mark { font-size: 32px; font-weight: 700; color: var(--plum); letter-spacing: -0.5px; font-family: Georgia, serif; }
+.rep-hero .logo-big { font-family: Georgia, serif; font-size: 34px; font-weight: 700; color: var(--plum); letter-spacing: -0.5px; }
 .rep-hero p { font-size: 14px; color: var(--text2); margin-top: 6px; }
 .rep-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; }
 .rep-btn { background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rl); padding: 14px 12px; cursor: pointer; text-align: left; transition: border-color 0.12s, background 0.12s; }
 .rep-btn:hover { background: var(--bg2); border-color: var(--plum); }
-.rep-btn .rep-initial { width: 36px; height: 36px; border-radius: 50%; background: var(--plum); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
-.rep-btn .rep-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.rep-initial { width: 36px; height: 36px; border-radius: 50%; background: var(--plum); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+.rep-name { font-size: 14px; font-weight: 500; color: var(--text); }
 
-/* clinic list */
-.filter-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-.filter-pill { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; }
-.filter-pill.active { background: var(--plum); color: white; border-color: var(--plum); }
-.search-wrap { position: relative; margin-bottom: 12px; }
-.search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text3); pointer-events: none; }
-.search-box { width: 100%; padding: 8px 10px 8px 34px; font-size: 14px; border: 0.5px solid var(--border2); border-radius: var(--r); background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
-.search-box:focus { border-color: var(--plum); }
-.clinic-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--rl); padding: 12px 14px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.12s; }
-.clinic-card:hover { border-color: var(--border2); }
-.clinic-card .cc-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.3; }
-.clinic-card .cc-addr { font-size: 12px; color: var(--text2); margin-top: 3px; }
-.clinic-card .cc-spec { font-size: 11px; color: var(--text3); margin-top: 2px; }
-.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--r); white-space: nowrap; flex-shrink: 0; }
-.badge-A { background: var(--gold); color: #fff; font-weight: 600; }
-.badge-B { background: var(--bg-info); color: var(--text-info); }
-.badge-C { background: var(--bg3); color: var(--text2); }
-.badge-visited { background: var(--bg-success); color: var(--text-success); }
-.badge-pending { background: var(--bg-warning); color: var(--text-warning); }
-.section-head { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text3); margin: 20px 0 8px; }
+/* home menu */
+.home-greeting { font-size: 18px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.home-sub { font-size: 13px; color: var(--text2); margin-bottom: 1.75rem; }
+.menu-card { display: flex; align-items: center; gap: 14px; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rl); padding: 18px 16px; margin-bottom: 12px; cursor: pointer; transition: border-color 0.12s, background 0.12s; }
+.menu-card:hover { background: var(--bg2); border-color: var(--plum); }
+.menu-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.menu-icon.gold { background: var(--gold); color: #fff; }
+.menu-icon.plum { background: var(--plum); color: #fff; }
+.menu-card-text .mc-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.menu-card-text .mc-sub { font-size: 12px; color: var(--text2); margin-top: 3px; }
 
-/* detail */
-.detail-hero { background: var(--bg2); border-radius: var(--rl); padding: 14px; margin-bottom: 16px; }
-.detail-hero .dh-name { font-size: 16px; font-weight: 500; color: var(--text); }
-.detail-hero .dh-addr { font-size: 13px; color: var(--text2); margin-top: 4px; }
-.detail-hero .dh-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-.providers-list { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--rl); margin-bottom: 16px; overflow: hidden; }
-.provider-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 0.5px solid var(--border); }
-.provider-row:last-child { border-bottom: none; }
-.provider-row .pr-init { width: 30px; height: 30px; border-radius: 50%; background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--text2); flex-shrink: 0; }
-.provider-row .pr-name { font-size: 13px; font-weight: 500; color: var(--text); }
-.provider-row .pr-cred { font-size: 11px; color: var(--text2); }
-.provider-row .pr-note { font-size: 11px; color: var(--text3); margin-top: 1px; }
-.prev-visit-box { background: var(--cream2); border-left: 3px solid var(--plum); border-radius: var(--rl); padding: 12px 14px; margin-bottom: 14px; }
-.prev-visit-box .pvb-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--plum); margin-bottom: 6px; }
-.prev-visit-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
-.prev-visit-row .pvr-k { color: var(--text2); }
-.prev-visit-row .pvr-v { font-weight: 500; color: var(--text); }
-
-/* visit form */
-.prog-bar { height: 3px; background: var(--bg3); border-radius: 2px; margin-bottom: 20px; }
-.prog-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.3s; }
-label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 5px; margin-top: 16px; }
-input[type=text], select, textarea {
-  width: 100%; font-size: 14px; padding: 8px 10px;
+/* forms */
+.form-section { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text3); margin: 20px 0 8px; padding-top: 16px; border-top: 0.5px solid var(--border); }
+.form-section:first-of-type { margin-top: 0; border-top: none; padding-top: 0; }
+label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 5px; margin-top: 14px; }
+label:first-of-type { margin-top: 0; }
+input[type=text], input[type=email], input[type=tel], select, textarea {
+  width: 100%; font-size: 14px; padding: 9px 11px;
   border: 0.5px solid var(--border2); border-radius: var(--r);
   background: var(--bg); color: var(--text); outline: none; font-family: inherit;
 }
-input[type=text]:focus, select:focus, textarea:focus { border-color: var(--plum); box-shadow: 0 0 0 3px rgba(92,45,74,0.12); }
+input:focus, select:focus, textarea:focus { border-color: var(--plum); box-shadow: 0 0 0 3px rgba(92,45,74,0.10); }
 textarea { height: 72px; resize: vertical; }
 select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a5f6e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
 .radio-group { display: flex; flex-direction: column; gap: 7px; margin-top: 6px; }
 .radio-opt { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text); cursor: pointer; }
 .radio-opt input { accent-color: var(--plum); width: auto; }
-.sec-divider { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text3); margin-top: 24px; margin-bottom: 0; padding-top: 16px; border-top: 0.5px solid var(--border); }
+
+/* buttons */
+.btn { display: block; width: 100%; padding: 11px 16px; font-size: 14px; font-weight: 500; border: 0.5px solid var(--border2); border-radius: var(--r); background: transparent; color: var(--text); cursor: pointer; text-align: center; margin-top: 12px; font-family: inherit; transition: background 0.1s; }
+.btn:hover { background: var(--bg2); }
+.btn-primary { background: var(--gold); color: #fff; border-color: var(--gold); font-weight: 600; }
+.btn-primary:hover { opacity: 0.88; background: var(--gold); }
+.btn-plum { background: var(--plum); color: #fff; border-color: var(--plum); font-weight: 600; }
+.btn-plum:hover { opacity: 0.88; background: var(--plum); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* lead list */
+.search-wrap { position: relative; margin-bottom: 12px; }
+.search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text3); pointer-events: none; }
+.search-box { width: 100%; padding: 8px 10px 8px 34px; font-size: 14px; border: 0.5px solid var(--border2); border-radius: var(--r); background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
+.search-box:focus { border-color: var(--plum); }
+.filter-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-pill { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; }
+.filter-pill.active { background: var(--plum); color: #fff; border-color: var(--plum); }
+.lead-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--rl); padding: 12px 14px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.12s; }
+.lead-card:hover { border-color: var(--border2); }
+.lead-card .lc-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.lead-card .lc-meta { font-size: 12px; color: var(--text2); margin-top: 3px; }
+.lead-card .lc-status { font-size: 11px; margin-top: 6px; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--r); white-space: nowrap; }
+.badge-A { background: var(--gold); color: #fff; font-weight: 600; }
+.badge-B { background: var(--bg-info); color: var(--text-info); }
+.badge-C { background: var(--bg3); color: var(--text2); }
+.badge-new { background: var(--plum); color: #fff; }
+.badge-contacted { background: var(--bg-info); color: var(--text-info); }
+.badge-converted { background: var(--bg-success); color: var(--text-success); font-weight: 600; }
+.badge-followup { background: var(--bg-warning); color: var(--text-warning); }
+
+/* visit form */
+.prog-bar { height: 3px; background: var(--bg3); border-radius: 2px; margin-bottom: 20px; }
+.prog-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.3s; }
+.sec-divider { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text3); margin-top: 24px; padding-top: 16px; border-top: 0.5px solid var(--border); margin-bottom: 0; }
 .cam-box { background: var(--bg2); border: 0.5px dashed var(--border2); border-radius: var(--r); padding: 1.25rem; text-align: center; cursor: pointer; margin-top: 10px; }
 .cam-box i { font-size: 26px; color: var(--text3); }
 .cam-box p { font-size: 13px; color: var(--text2); margin-top: 5px; }
@@ -124,74 +131,168 @@ select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmln
 video { width: 100%; border-radius: var(--r); display: none; margin-top: 8px; }
 video.active { display: block; }
 canvas { display: none; }
-.btn { display: block; width: 100%; padding: 11px 16px; font-size: 14px; font-weight: 500; border: 0.5px solid var(--border2); border-radius: var(--r); background: transparent; color: var(--text); cursor: pointer; text-align: center; margin-top: 12px; font-family: inherit; transition: background 0.1s; }
-.btn:hover { background: var(--bg2); }
-.btn-primary { background: var(--gold); color: #fff; border-color: var(--gold); font-weight: 600; }
-.btn-primary:hover { opacity: 0.88; background: var(--gold); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* detail */
+.detail-hero { background: var(--bg2); border-radius: var(--rl); padding: 14px; margin-bottom: 16px; }
+.detail-hero .dh-name { font-size: 17px; font-weight: 600; color: var(--text); }
+.detail-hero .dh-meta { font-size: 13px; color: var(--text2); margin-top: 4px; }
+.detail-hero .dh-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 7px 0; border-bottom: 0.5px solid var(--border); gap: 12px; }
+.info-row:last-child { border-bottom: none; }
+.info-k { color: var(--text2); }
+.info-v { font-weight: 500; color: var(--text); text-align: right; }
+.info-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--rl); padding: 1rem 1.25rem; margin-bottom: 14px; }
+
+/* confirm */
 .confirm-icon { font-size: 52px; color: var(--gold); }
 .summary-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--rl); padding: 1rem 1.25rem; }
-.sum-row { display: flex; justify-content: space-between; align-items: flex-start; font-size: 13px; padding: 7px 0; border-bottom: 0.5px solid var(--border); gap: 12px; }
+.sum-row { display: flex; justify-content: space-between; font-size: 13px; padding: 7px 0; border-bottom: 0.5px solid var(--border); gap: 12px; }
 .sum-row:last-child { border-bottom: none; }
-.sum-k { color: var(--text2); white-space: nowrap; flex-shrink: 0; }
-.sum-v { font-weight: 500; color: var(--text); text-align: right; font-size: 13px; }
+.sum-k { color: var(--text2); flex-shrink: 0; }
+.sum-v { font-weight: 500; color: var(--text); text-align: right; }
 .error-msg { font-size: 13px; color: var(--text-danger); background: var(--bg-danger); padding: 10px 12px; border-radius: var(--r); margin-top: 8px; }
 </style>
 </head>
 <body>
 <div class="shell">
   <div class="topbar">
-    <button class="topbar-back" id="tb-back" aria-label="Back"><i class="ti ti-arrow-left"></i></button>
-    <span class="topbar-logo">⊛ wellnest</span>
-    <span class="topbar-title" id="tb-title">Visit Tracker</span>
-    <span class="topbar-rep" id="tb-rep" style="display:none"></span>
+    <button class="tb-back" id="tb-back" aria-label="Back"><i class="ti ti-arrow-left"></i></button>
+    <span class="tb-logo">⊛ wellnest</span>
+    <span class="tb-title" id="tb-title">Field Tracker</span>
+    <span class="tb-rep" id="tb-rep"></span>
   </div>
   <div class="content">
 
-    <!-- REP SELECT -->
+    <!-- 1. REP SELECT -->
     <div id="s-rep" class="screen active">
       <div class="rep-hero">
-        <div class="wn-mark">Wellnest</div>
+        <div class="logo-big">Wellnest</div>
         <p>Clinic Outreach · 2026</p>
       </div>
       <div id="rep-grid" class="rep-grid">
-        <div class="loading-wrap"><div class="spinner"></div><p>Loading reps…</p></div>
+        <div class="spinner-wrap" style="grid-column:1/-1"><div class="spinner"></div><p>Loading…</p></div>
       </div>
     </div>
 
-    <!-- CLINIC LIST -->
-    <div id="s-list" class="screen">
+    <!-- 2. HOME MENU -->
+    <div id="s-home" class="screen">
+      <div style="padding:1.5rem 0 0.5rem">
+        <div class="home-greeting" id="home-greeting">Good morning</div>
+        <div class="home-sub">What would you like to do today?</div>
+      </div>
+      <div class="menu-card" id="btn-new-lead">
+        <div class="menu-icon gold"><i class="ti ti-plus" aria-hidden="true"></i></div>
+        <div class="menu-card-text">
+          <div class="mc-title">Add new lead</div>
+          <div class="mc-sub">Capture a new OBGYN practice to visit</div>
+        </div>
+        <i class="ti ti-chevron-right" style="color:var(--text3);margin-left:auto" aria-hidden="true"></i>
+      </div>
+      <div class="menu-card" id="btn-plan-day">
+        <div class="menu-icon plum"><i class="ti ti-map-pin" aria-hidden="true"></i></div>
+        <div class="menu-card-text">
+          <div class="mc-title">Plan your day</div>
+          <div class="mc-sub">View leads and log a visit</div>
+        </div>
+        <i class="ti ti-chevron-right" style="color:var(--text3);margin-left:auto" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <!-- 3. NEW LEAD FORM -->
+    <div id="s-new-lead" class="screen">
+      <div class="form-section">Practice info</div>
+      <label for="nl-name">Practice / clinic name *</label>
+      <input type="text" id="nl-name" placeholder="e.g. Valley Women's Health" />
+      <label for="nl-addr">Address</label>
+      <input type="text" id="nl-addr" placeholder="Street address" />
+      <label for="nl-city">City</label>
+      <input type="text" id="nl-city" placeholder="City, UT" />
+      <label for="nl-phone">Phone</label>
+      <input type="tel" id="nl-phone" placeholder="(801) 555-0000" />
+      <label for="nl-spec">Specialty</label>
+      <select id="nl-spec">
+        <option value="">— select —</option>
+        <option>OB/GYN</option>
+        <option>OB/GYN / Women's Health</option>
+        <option>OB/GYN / Family Medicine</option>
+        <option>Women's Health</option>
+        <option>Midwifery</option>
+        <option>Urology</option>
+        <option>Family Medicine</option>
+        <option>Other</option>
+      </select>
+
+      <div class="form-section">Priority & context</div>
+      <label>Priority rank</label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="nl-priority" value="A" /> <strong>A</strong> — High priority (must visit)</label>
+        <label class="radio-opt"><input type="radio" name="nl-priority" value="B" /> <strong>B</strong> — Medium priority</label>
+        <label class="radio-opt"><input type="radio" name="nl-priority" value="C" /> <strong>C</strong> — Low priority</label>
+      </div>
+      <label for="nl-providers">Key providers (names, credentials)</label>
+      <textarea id="nl-providers" placeholder="e.g. Dr. Jane Smith MD, Sarah Jones FNP…"></textarea>
+      <label for="nl-source">How did you find this lead?</label>
+      <select id="nl-source">
+        <option value="">— select —</option>
+        <option>Drive-by / in person</option>
+        <option>Google / online search</option>
+        <option>Referral from another clinic</option>
+        <option>Insurance directory</option>
+        <option>Patient referral</option>
+        <option>Other</option>
+      </select>
+
+      <div class="form-section">Initial contact</div>
+      <label>Have you already reached out?</label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="nl-contacted" value="Yes" /> Yes</label>
+        <label class="radio-opt"><input type="radio" name="nl-contacted" value="No" /> No — adding for future visit</label>
+      </div>
+      <label for="nl-contact-name">Primary contact name (if known)</label>
+      <input type="text" id="nl-contact-name" placeholder="e.g. Karen, Office Manager" />
+      <label for="nl-email">Contact email (if known)</label>
+      <input type="email" id="nl-email" placeholder="office@clinic.com" />
+      <label for="nl-notes">Notes</label>
+      <textarea id="nl-notes" placeholder="Anything else worth noting about this practice…"></textarea>
+
+      <div id="nl-error"></div>
+      <button class="btn btn-primary" id="nl-submit" style="margin-top:1.5rem">Save lead</button>
+      <button class="btn" id="nl-cancel">Cancel</button>
+    </div>
+
+    <!-- 4. LEAD LIST (Plan your day) -->
+    <div id="s-leads" class="screen">
       <div class="search-wrap">
         <i class="ti ti-search" aria-hidden="true"></i>
-        <input type="text" class="search-box" id="search-input" placeholder="Search clinics…" />
+        <input type="text" class="search-box" id="lead-search" placeholder="Search leads…" />
       </div>
-      <div class="filter-row" id="filter-row">
-        <button class="filter-pill active" data-filter="all">All</button>
-        <button class="filter-pill" data-filter="A">Priority A</button>
-        <button class="filter-pill" data-filter="B">Priority B</button>
-        <button class="filter-pill" data-filter="visited">Visited</button>
-        <button class="filter-pill" data-filter="pending">Not visited</button>
+      <div class="filter-row" id="lead-filter-row">
+        <button class="filter-pill active" data-f="all">All</button>
+        <button class="filter-pill" data-f="A">Priority A</button>
+        <button class="filter-pill" data-f="B">Priority B</button>
+        <button class="filter-pill" data-f="unvisited">Not visited</button>
+        <button class="filter-pill" data-f="visited">Visited</button>
       </div>
-      <div id="clinic-list"></div>
+      <div id="lead-list"></div>
     </div>
 
-    <!-- CLINIC DETAIL -->
-    <div id="s-detail" class="screen">
+    <!-- 5. LEAD DETAIL -->
+    <div id="s-lead-detail" class="screen">
       <div class="detail-hero">
-        <div class="dh-name" id="det-name"></div>
-        <div class="dh-addr" id="det-addr"></div>
-        <div class="dh-meta" id="det-meta"></div>
+        <div class="dh-name" id="ld-name"></div>
+        <div class="dh-meta" id="ld-meta"></div>
+        <div class="dh-badges" id="ld-badges"></div>
       </div>
-      <div id="det-prev"></div>
-      <div id="det-providers"></div>
-      <button class="btn btn-primary" id="start-visit-btn">Start visit</button>
+      <div id="ld-info"></div>
+      <div id="ld-prev-visit"></div>
+      <button class="btn btn-plum" id="ld-start-visit">Log a visit to this clinic</button>
     </div>
 
-    <!-- VISIT FORM -->
+    <!-- 6. VISIT FORM -->
     <div id="s-visit" class="screen">
       <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
       <label for="q-contact">Contact name</label>
-      <input type="text" id="q-contact" placeholder="Name of person you spoke with" />
+      <input type="text" id="q-contact" placeholder="Who did you speak with?" />
       <label for="q-title">Their role / title</label>
       <input type="text" id="q-title" placeholder="e.g. Office Manager, MD, Front Desk" />
       <label>Visit type</label>
@@ -204,11 +305,10 @@ canvas { display: none; }
       <label>Pipeline status after this visit</label>
       <select id="q-pipeline">
         <option value="">— select —</option>
-        <option>Not Contacted</option>
         <option>Initial Outreach Sent</option>
         <option>Call Scheduled</option>
         <option>Meeting Held</option>
-        <option>Email and Follow Up Email Sent</option>
+        <option>Follow-Up Sent</option>
         <option>On Hold</option>
         <option>Converted</option>
       </select>
@@ -227,15 +327,15 @@ canvas { display: none; }
         <label class="radio-opt"><input type="radio" name="q-coll" value="Yes – both" /> Yes – both</label>
         <label class="radio-opt"><input type="radio" name="q-coll" value="No" /> No</label>
       </div>
-      <label>Open to luncheon / lunch-n-mingle?</label>
+      <label>Open to luncheon?</label>
       <div class="radio-group">
         <label class="radio-opt"><input type="radio" name="q-lunch" value="Yes" /> Yes</label>
         <label class="radio-opt"><input type="radio" name="q-lunch" value="No" /> No</label>
         <label class="radio-opt"><input type="radio" name="q-lunch" value="Unknown" /> Unknown</label>
       </div>
-      <label>Currently referring patients to Wellnest?</label>
+      <label>Currently referring to Wellnest?</label>
       <div class="radio-group">
-        <label class="radio-opt"><input type="radio" name="q-ref" value="Yes – already referring" /> Yes – already referring</label>
+        <label class="radio-opt"><input type="radio" name="q-ref" value="Yes" /> Yes</label>
         <label class="radio-opt"><input type="radio" name="q-ref" value="No" /> No</label>
         <label class="radio-opt"><input type="radio" name="q-ref" value="Unknown" /> Unknown</label>
       </div>
@@ -246,8 +346,8 @@ canvas { display: none; }
         <label class="radio-opt"><input type="radio" name="q-fu" value="Yes – in-person" /> Yes – in-person</label>
         <label class="radio-opt"><input type="radio" name="q-fu" value="No" /> No</label>
       </div>
-      <label for="q-next">Notes / next step</label>
-      <textarea id="q-next" placeholder="What happened, what's next…"></textarea>
+      <label for="q-notes">Notes / next step</label>
+      <textarea id="q-notes" placeholder="What happened, what's next…"></textarea>
       <div class="sec-divider">Location verification</div>
       <div id="geo-status" style="margin-top:10px"></div>
       <div class="cam-box" id="cam-trigger" style="margin-top:10px">
@@ -257,53 +357,71 @@ canvas { display: none; }
       <video id="cam-feed" playsinline></video>
       <canvas id="cam-canvas"></canvas>
       <img id="photo-preview" class="preview-img" alt="Door photo" />
-      <div id="submit-error"></div>
-      <button class="btn btn-primary" id="submit-btn" style="margin-top:24px">Submit visit</button>
+      <div id="visit-error"></div>
+      <button class="btn btn-primary" id="visit-submit" style="margin-top:24px">Submit visit</button>
     </div>
 
-    <!-- CONFIRM -->
+    <!-- 7. CONFIRM -->
     <div id="s-confirm" class="screen">
-      <div style="text-align:center;padding:2rem 0 1.5rem;">
+      <div style="text-align:center;padding:2rem 0 1.5rem">
         <i class="ti ti-circle-check confirm-icon" aria-hidden="true"></i>
-        <h2 style="margin-top:12px;font-size:18px;font-weight:500;color:var(--text)">Visit logged</h2>
+        <h2 style="margin-top:12px;font-size:18px;font-weight:500">Visit logged</h2>
         <p style="font-size:13px;color:var(--text2);margin-top:4px" id="conf-name"></p>
       </div>
       <div id="conf-summary"></div>
-      <button class="btn" style="margin-top:1.5rem" id="back-home">Back to clinics</button>
+      <button class="btn btn-plum" style="margin-top:1.5rem" id="conf-home">Back to home</button>
+    </div>
+
+    <!-- 8. LEAD SAVED CONFIRM -->
+    <div id="s-lead-saved" class="screen">
+      <div style="text-align:center;padding:2rem 0 1.5rem">
+        <i class="ti ti-bookmark-check" style="font-size:52px;color:var(--plum)" aria-hidden="true"></i>
+        <h2 style="margin-top:12px;font-size:18px;font-weight:500">Lead saved</h2>
+        <p style="font-size:13px;color:var(--text2);margin-top:4px" id="lead-saved-name"></p>
+      </div>
+      <button class="btn btn-primary" id="lead-saved-add-another" style="margin-top:1rem">Add another lead</button>
+      <button class="btn btn-plum" id="lead-saved-plan">Go to Plan Your Day</button>
+      <button class="btn" id="lead-saved-home">Back to home</button>
     </div>
 
   </div>
 </div>
 
 <script>
-// ── CONFIG ───────────────────────────────────────────────────
-const SUPABASE_URL  = 'https://grqibbvwixtzrullltwy.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdycWliYnZ3aXh0enJ1bGxsdHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDE4MDUsImV4cCI6MjA5Njc3NzgwNX0.-_DbTS5c1qpFLBSLiIi9aXK2nALQXLyQSZl-5tbl6zk';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const SUPA_URL  = 'https://grqibbvwixtzrullltwy.supabase.co';
+const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdycWliYnZ3aXh0enJ1bGxsdHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDE4MDUsImV4cCI6MjA5Njc3NzgwNX0.-_DbTS5c1qpFLBSLiIi9aXK2nALQXLyQSZl-5tbl6zk';
+const sb = supabase.createClient(SUPA_URL, SUPA_ANON);
 
-// ── STATE ────────────────────────────────────────────────────
-let state = {
-  rep: null,
-  clinics: [],
-  visitedMap: {},   // clinicId -> latest visit row
-  selectedClinic: null,
-  geoCoords: null,
-  photoBlob: null,
-  photoPreviewUrl: null,
+let state = { rep: null, leads: [], visitedMap: {}, selectedLead: null, geoCoords: null, photoBlob: null };
+let stream = null, capturing = false, leadFilter = 'all', leadSearch = '';
+
+// ── SCREEN NAV ───────────────────────────────────────────────
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function setScreen(id, title, showBack) {
+  show(id);
+  document.getElementById('tb-title').textContent = title;
+  document.getElementById('tb-back').style.display = showBack ? '' : 'none';
+}
+
+document.getElementById('tb-back').onclick = () => {
+  const cur = document.querySelector('.screen.active')?.id;
+  if (cur === 's-home')        { setScreen('s-rep', 'Field Tracker', false); document.getElementById('tb-rep').style.display = 'none'; }
+  else if (cur === 's-new-lead')    { setScreen('s-home', 'Home', false); }
+  else if (cur === 's-leads')       { setScreen('s-home', 'Home', false); }
+  else if (cur === 's-lead-detail') { setScreen('s-leads', 'Plan your day', true); }
+  else if (cur === 's-visit')       { stopCamera(); setScreen('s-lead-detail', state.selectedLead?.name || '', true); }
+  else if (cur === 's-confirm')     { setScreen('s-home', 'Home', false); }
+  else if (cur === 's-lead-saved')  { setScreen('s-home', 'Home', false); }
 };
-let stream = null;
-let capturing = false;
-let activeFilter = 'all';
-let searchQuery = '';
 
-// ── INIT ─────────────────────────────────────────────────────
-async function init() {
+// ── INIT REPS ────────────────────────────────────────────────
+async function initReps() {
   const grid = document.getElementById('rep-grid');
   try {
-    const { data: reps, error } = await sb.from('wellnest_reps').select('*').eq('active', true).order('name');
+    const { data, error } = await sb.from('wellnest_reps').select('*').eq('active', true).order('name');
     if (error) throw error;
     grid.innerHTML = '';
-    reps.forEach(rep => {
+    data.forEach(rep => {
       const btn = document.createElement('button');
       btn.className = 'rep-btn';
       const ini = rep.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
@@ -316,309 +434,303 @@ async function init() {
   }
 }
 
-// ── SCREEN HELPERS ───────────────────────────────────────────
-function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-function setScreen(id, title, showBack) {
-  show(id);
-  document.getElementById('tb-title').textContent = title;
-  document.getElementById('tb-back').style.display = showBack ? '' : 'none';
+function selectRep(rep) {
+  state.rep = rep;
+  const el = document.getElementById('tb-rep');
+  el.textContent = rep.name; el.style.display = '';
+  const hr = new Date().getHours();
+  const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('home-greeting').textContent = `${greet}, ${rep.name.split(' ')[0]}`;
+  setScreen('s-home', 'Home', false);
 }
 
-document.getElementById('tb-back').onclick = () => {
-  const active = document.querySelector('.screen.active');
-  if (!active) return;
-  const id = active.id;
-  if (id === 's-list')    { setScreen('s-rep', 'Visit Tracker', false); document.getElementById('tb-rep').style.display = 'none'; }
-  else if (id === 's-detail') { renderList(); setScreen('s-list', "Clinics", true); }
-  else if (id === 's-visit')  { stopCamera(); openDetail(state.selectedClinic); }
-  else if (id === 's-confirm') { renderList(); setScreen('s-list', "Clinics", true); }
+// ── HOME BUTTONS ─────────────────────────────────────────────
+document.getElementById('btn-new-lead').onclick = () => {
+  clearLeadForm();
+  setScreen('s-new-lead', 'Add new lead', true);
 };
 
-// ── REP SELECT ───────────────────────────────────────────────
-async function selectRep(rep) {
-  state.rep = rep;
-  document.getElementById('tb-rep').textContent = rep.name;
-  document.getElementById('tb-rep').style.display = '';
-  await loadClinics();
-  renderList();
-  setScreen('s-list', 'Clinics', true);
+document.getElementById('btn-plan-day').onclick = async () => {
+  setScreen('s-leads', 'Plan your day', true);
+  await loadLeads();
+};
+
+// ── NEW LEAD FORM ────────────────────────────────────────────
+function clearLeadForm() {
+  ['nl-name','nl-addr','nl-city','nl-phone','nl-contact-name','nl-email','nl-notes','nl-providers'].forEach(id => document.getElementById(id).value = '');
+  ['nl-spec','nl-source'].forEach(id => document.getElementById(id).value = '');
+  document.querySelectorAll('input[name="nl-priority"], input[name="nl-contacted"]').forEach(r => r.checked = false);
+  document.getElementById('nl-error').innerHTML = '';
 }
 
-// ── LOAD CLINICS + VISITS ────────────────────────────────────
-async function loadClinics() {
-  const listEl = document.getElementById('clinic-list');
-  listEl.innerHTML = '<div class="loading-wrap"><div class="spinner"></div><p>Loading clinics…</p></div>';
+document.getElementById('nl-cancel').onclick = () => setScreen('s-home', 'Home', false);
 
+document.getElementById('nl-submit').onclick = async () => {
+  const name = document.getElementById('nl-name').value.trim();
+  if (!name) { document.getElementById('nl-error').innerHTML = '<div class="error-msg">Practice name is required.</div>'; return; }
+  const btn = document.getElementById('nl-submit');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  const priority = document.querySelector('input[name="nl-priority"]:checked')?.value || 'B';
+  const contacted = document.querySelector('input[name="nl-contacted"]:checked')?.value || 'No';
+  const providersRaw = document.getElementById('nl-providers').value.trim();
+  const providers = providersRaw ? providersRaw.split('\n').filter(Boolean).map(p => ({ name: p.trim() })) : [];
+  try {
+    const { error } = await sb.from('wellnest_clinics').insert({
+      name,
+      address: document.getElementById('nl-addr').value.trim() || null,
+      city:    document.getElementById('nl-city').value.trim() || null,
+      phone:   document.getElementById('nl-phone').value.trim() || null,
+      specialty: document.getElementById('nl-spec').value || null,
+      priority,
+      providers,
+      active: true,
+      notes: document.getElementById('nl-notes').value.trim() || null,
+      added_by_rep_id: state.rep.id,
+      added_by_rep_name: state.rep.name,
+      source: document.getElementById('nl-source').value || null,
+      initial_contact: contacted,
+      primary_contact_name: document.getElementById('nl-contact-name').value.trim() || null,
+      primary_contact_email: document.getElementById('nl-email').value.trim() || null,
+    });
+    if (error) throw error;
+    document.getElementById('lead-saved-name').textContent = name;
+    setScreen('s-lead-saved', 'Lead saved', false);
+  } catch(e) {
+    document.getElementById('nl-error').innerHTML = `<div class="error-msg">Save failed: ${e.message}</div>`;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save lead';
+  }
+};
+
+document.getElementById('lead-saved-add-another').onclick = () => { clearLeadForm(); setScreen('s-new-lead', 'Add new lead', true); };
+document.getElementById('lead-saved-plan').onclick = async () => { setScreen('s-leads', 'Plan your day', true); await loadLeads(); };
+document.getElementById('lead-saved-home').onclick = () => setScreen('s-home', 'Home', false);
+
+// ── LOAD LEADS ───────────────────────────────────────────────
+async function loadLeads() {
+  const listEl = document.getElementById('lead-list');
+  listEl.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div><p>Loading leads…</p></div>';
   const [clinicsRes, visitsRes] = await Promise.all([
     sb.from('wellnest_clinics').select('*').eq('active', true).order('priority').order('name'),
     sb.from('wellnest_visits').select('*').eq('rep_id', state.rep.id).order('visit_date', { ascending: false })
   ]);
-
-  if (clinicsRes.error) { listEl.innerHTML = `<div class="error-msg">Failed to load clinics: ${clinicsRes.error.message}</div>`; return; }
-
-  state.clinics = clinicsRes.data;
-
-  // build visitedMap: clinicId -> most recent visit
+  if (clinicsRes.error) { listEl.innerHTML = `<div class="error-msg">Failed: ${clinicsRes.error.message}</div>`; return; }
+  state.leads = clinicsRes.data;
   state.visitedMap = {};
-  if (visitsRes.data) {
-    visitsRes.data.forEach(v => {
-      if (!state.visitedMap[v.clinic_id]) state.visitedMap[v.clinic_id] = v;
-    });
-  }
+  (visitsRes.data || []).forEach(v => { if (!state.visitedMap[v.clinic_id]) state.visitedMap[v.clinic_id] = v; });
+  renderLeads();
 }
 
-// ── RENDER LIST ──────────────────────────────────────────────
-function renderList() {
-  const el = document.getElementById('clinic-list');
+function renderLeads() {
+  const el = document.getElementById('lead-list');
   el.innerHTML = '';
-  let clinics = state.clinics.filter(c => {
-    if (searchQuery && !c.name.toLowerCase().includes(searchQuery) && !c.city.toLowerCase().includes(searchQuery)) return false;
+  const filtered = state.leads.filter(c => {
     const visited = !!state.visitedMap[c.id];
-    if (activeFilter === 'A' && c.priority !== 'A') return false;
-    if (activeFilter === 'B' && c.priority !== 'B') return false;
-    if (activeFilter === 'visited' && !visited) return false;
-    if (activeFilter === 'pending' && visited) return false;
+    if (leadSearch && !c.name.toLowerCase().includes(leadSearch) && !(c.city||'').toLowerCase().includes(leadSearch)) return false;
+    if (leadFilter === 'A' && c.priority !== 'A') return false;
+    if (leadFilter === 'B' && c.priority !== 'B') return false;
+    if (leadFilter === 'unvisited' && visited) return false;
+    if (leadFilter === 'visited' && !visited) return false;
     return true;
   });
-  if (!clinics.length) {
-    el.innerHTML = '<p style="text-align:center;color:var(--text3);font-size:14px;padding:2rem 0">No clinics match</p>';
-    return;
-  }
-  clinics.forEach(c => {
+  if (!filtered.length) { el.innerHTML = '<p style="text-align:center;color:var(--text3);font-size:14px;padding:2rem 0">No leads match</p>'; return; }
+  filtered.forEach(c => {
     const visited = !!state.visitedMap[c.id];
     const v = state.visitedMap[c.id];
     const div = document.createElement('div');
-    div.className = 'clinic-card';
+    div.className = 'lead-card';
     div.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
         <div>
-          <div class="cc-name">${c.name}</div>
-          <div class="cc-addr">${c.city} · ${(c.address||'').split(',')[0]}</div>
-          ${c.specialty ? `<div class="cc-spec">${c.specialty}</div>` : ''}
+          <div class="lc-name">${c.name}</div>
+          <div class="lc-meta">${[c.city, c.specialty].filter(Boolean).join(' · ')}</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
-          <span class="badge badge-${c.priority}">${c.priority}</span>
-          <span class="badge badge-${visited ? 'visited' : 'pending'}">${visited ? 'visited' : 'pending'}</span>
-        </div>
+        <span class="badge badge-${c.priority}">${c.priority}</span>
       </div>
-      ${v ? `<div style="font-size:11px;color:var(--text3);margin-top:6px">Last visit: ${new Date(v.visit_date).toLocaleDateString()} · ${v.pipeline_status||'—'}</div>` : ''}
-    `;
-    div.onclick = () => { state.selectedClinic = c; openDetail(c); };
+      <div class="lc-status" style="margin-top:6px">
+        ${visited
+          ? `<span class="badge badge-contacted">Visited ${new Date(v.visit_date).toLocaleDateString()}</span>`
+          : `<span class="badge" style="background:var(--bg3);color:var(--text3)">Not yet visited</span>`}
+      </div>`;
+    div.onclick = () => openLeadDetail(c);
     el.appendChild(div);
   });
 }
 
-document.getElementById('search-input').oninput = e => { searchQuery = e.target.value.toLowerCase(); renderList(); };
-document.getElementById('filter-row').onclick = e => {
+document.getElementById('lead-search').oninput = e => { leadSearch = e.target.value.toLowerCase(); renderLeads(); };
+document.getElementById('lead-filter-row').onclick = e => {
   const pill = e.target.closest('.filter-pill');
   if (!pill) return;
-  activeFilter = pill.dataset.filter;
+  leadFilter = pill.dataset.f;
   document.querySelectorAll('.filter-pill').forEach(p => p.classList.toggle('active', p === pill));
-  renderList();
+  renderLeads();
 };
 
-// ── DETAIL ───────────────────────────────────────────────────
-function openDetail(c) {
-  document.getElementById('det-name').textContent = c.name;
-  document.getElementById('det-addr').textContent = c.address || '';
-  const meta = document.getElementById('det-meta');
-  meta.innerHTML = `<span class="badge badge-${c.priority}">Priority ${c.priority}</span>`;
-  if (c.specialty) meta.innerHTML += `<span class="badge" style="background:var(--bg3);color:var(--text2)">${c.specialty}</span>`;
-  if (c.city)      meta.innerHTML += `<span class="badge" style="background:var(--bg3);color:var(--text2)">${c.city}</span>`;
-  if (c.phone)     meta.innerHTML += `<span class="badge" style="background:var(--bg3);color:var(--text2)">${c.phone}</span>`;
+// ── LEAD DETAIL ──────────────────────────────────────────────
+function openLeadDetail(c) {
+  state.selectedLead = c;
+  document.getElementById('ld-name').textContent = c.name;
+  document.getElementById('ld-meta').textContent = [c.address, c.city].filter(Boolean).join(', ');
+  const badges = document.getElementById('ld-badges');
+  badges.innerHTML = `<span class="badge badge-${c.priority}">Priority ${c.priority}</span>`;
+  if (c.specialty) badges.innerHTML += `<span class="badge" style="background:var(--bg3);color:var(--text2)">${c.specialty}</span>`;
+  if (c.phone) badges.innerHTML += `<span class="badge" style="background:var(--bg3);color:var(--text2)">${c.phone}</span>`;
+
+  const rows = [
+    c.source ? ['Source', c.source] : null,
+    c.initial_contact ? ['Initial contact', c.initial_contact] : null,
+    c.primary_contact_name ? ['Contact', c.primary_contact_name] : null,
+    c.primary_contact_email ? ['Email', c.primary_contact_email] : null,
+    c.notes ? ['Notes', c.notes] : null,
+    c.added_by_rep_name ? ['Added by', c.added_by_rep_name] : null,
+  ].filter(Boolean);
+
+  document.getElementById('ld-info').innerHTML = rows.length
+    ? `<div class="info-card">${rows.map(([k,v]) => `<div class="info-row"><span class="info-k">${k}</span><span class="info-v">${v}</span></div>`).join('')}</div>`
+    : '';
 
   const prev = state.visitedMap[c.id];
-  const prevEl = document.getElementById('det-prev');
-  if (prev) {
-    prevEl.innerHTML = `<div class="prev-visit-box">
-      <div class="pvb-label"><i class="ti ti-circle-check" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>Previous visit logged</div>
-      <div class="prev-visit-row"><span class="pvr-k">By</span><span class="pvr-v">${prev.rep_name||'—'}</span></div>
-      <div class="prev-visit-row"><span class="pvr-k">When</span><span class="pvr-v">${new Date(prev.visit_date).toLocaleDateString()}</span></div>
-      <div class="prev-visit-row"><span class="pvr-k">Contact</span><span class="pvr-v">${prev.contact_name||'—'}</span></div>
-      <div class="prev-visit-row"><span class="pvr-k">Status</span><span class="pvr-v">${prev.pipeline_status||'—'}</span></div>
-    </div>`;
-  } else { prevEl.innerHTML = ''; }
+  document.getElementById('ld-prev-visit').innerHTML = prev
+    ? `<div class="info-card" style="border-left:3px solid var(--plum)">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--plum);margin-bottom:8px">Last visit</div>
+        <div class="info-row"><span class="info-k">Date</span><span class="info-v">${new Date(prev.visit_date).toLocaleDateString()}</span></div>
+        <div class="info-row"><span class="info-k">Contact</span><span class="info-v">${prev.contact_name||'—'}</span></div>
+        <div class="info-row"><span class="info-k">Status</span><span class="info-v">${prev.pipeline_status||'—'}</span></div>
+        <div class="info-row"><span class="info-k">Notes</span><span class="info-v">${prev.notes||'—'}</span></div>
+       </div>` : '';
 
-  const providers = Array.isArray(c.providers) ? c.providers : (c.providers ? JSON.parse(c.providers) : []);
-  const provEl = document.getElementById('det-providers');
-  if (providers.length) {
-    provEl.innerHTML = `<div class="section-head">Providers (${providers.length})</div><div class="providers-list">` +
-      providers.map(p => {
-        const ini = p.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-        return `<div class="provider-row"><div class="pr-init">${ini}</div><div><div class="pr-name">${p.name} <span class="pr-cred">${p.cred}</span></div>${p.note ? `<div class="pr-note">${p.note}</div>` : ''}</div></div>`;
-      }).join('') + '</div>';
-  } else { provEl.innerHTML = ''; }
-
-  setScreen('s-detail', c.name, true);
+  setScreen('s-lead-detail', c.name, true);
 }
 
 // ── VISIT FORM ───────────────────────────────────────────────
-document.getElementById('start-visit-btn').onclick = () => {
-  state.photoBlob = null; state.geoCoords = null; state.photoPreviewUrl = null;
+document.getElementById('ld-start-visit').onclick = () => {
+  state.photoBlob = null; state.geoCoords = null;
   document.getElementById('photo-preview').style.display = 'none';
   document.getElementById('geo-status').innerHTML = '';
   document.getElementById('cam-feed').className = '';
   document.getElementById('cam-trigger').style.display = 'block';
   document.getElementById('cam-trigger').innerHTML = '<i class="ti ti-camera" aria-hidden="true"></i><p>Tap to photo at the door</p>';
   document.getElementById('cam-trigger').onclick = startCamera;
-  document.getElementById('submit-error').innerHTML = '';
+  document.getElementById('visit-error').innerHTML = '';
   capturing = false;
-  ['q-contact','q-title','q-next'].forEach(id => document.getElementById(id).value = '');
+  ['q-contact','q-title','q-notes'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('q-pipeline').value = '';
-  document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[name^="q-"]').forEach(r => r.checked = false);
   document.getElementById('prog').style.width = '0%';
   getGeo();
   setScreen('s-visit', 'Log visit', true);
 };
 
-function updateProgress() {
-  const fields = ['q-contact','q-title','q-next'];
+function updateProg() {
+  const fields = ['q-contact','q-title','q-notes'];
   const radios = ['q-vtype','q-rec','q-coll','q-lunch','q-ref','q-fu'];
-  let filled = 0, total = fields.length + radios.length + 1 + 1;
-  fields.forEach(f => { if (document.getElementById(f).value.trim()) filled++; });
-  radios.forEach(r => { if (document.querySelector(`input[name="${r}"]:checked`)) filled++; });
-  if (document.getElementById('q-pipeline').value) filled++;
-  if (state.geoCoords) filled++;
-  document.getElementById('prog').style.width = Math.round(filled / total * 100) + '%';
+  let f = 0, t = fields.length + radios.length + 2;
+  fields.forEach(id => { if (document.getElementById(id).value.trim()) f++; });
+  radios.forEach(n => { if (document.querySelector(`input[name="${n}"]:checked`)) f++; });
+  if (document.getElementById('q-pipeline').value) f++;
+  if (state.geoCoords) f++;
+  document.getElementById('prog').style.width = Math.round(f/t*100) + '%';
 }
-['q-contact','q-title','q-next'].forEach(id => document.getElementById(id).addEventListener('input', updateProgress));
-document.getElementById('q-pipeline').addEventListener('change', updateProgress);
-document.addEventListener('change', e => { if (e.target.type === 'radio') updateProgress(); });
+['q-contact','q-title','q-notes'].forEach(id => document.getElementById(id).addEventListener('input', updateProg));
+document.getElementById('q-pipeline').addEventListener('change', updateProg);
+document.addEventListener('change', e => { if (e.target.type === 'radio' && e.target.name.startsWith('q-')) updateProg(); });
 
 function getGeo() {
   if (!navigator.geolocation) return;
   document.getElementById('geo-status').innerHTML = '<span style="font-size:12px;color:var(--text3)">Getting GPS…</span>';
   navigator.geolocation.getCurrentPosition(pos => {
     state.geoCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: Math.round(pos.coords.accuracy) };
-    document.getElementById('geo-status').innerHTML = `<div class="geo-pill"><i class="ti ti-map-pin" aria-hidden="true"></i>${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)} · ±${Math.round(pos.coords.accuracy)}m</div>`;
-    updateProgress();
+    document.getElementById('geo-status').innerHTML = `<div class="geo-pill"><i class="ti ti-map-pin"></i>${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)} · ±${Math.round(pos.coords.accuracy)}m</div>`;
+    updateProg();
   }, () => {
-    document.getElementById('geo-status').innerHTML = '<span style="font-size:12px;color:var(--text3)">GPS unavailable — check permissions</span>';
+    document.getElementById('geo-status').innerHTML = '<span style="font-size:12px;color:var(--text3)">GPS unavailable</span>';
   });
 }
 
 async function startCamera() {
-  if (capturing) return;
-  capturing = true;
+  if (capturing) return; capturing = true;
   try {
     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
     const vid = document.getElementById('cam-feed');
-    vid.srcObject = stream; vid.className = 'active';
-    await vid.play();
-    document.getElementById('cam-trigger').innerHTML = '<i class="ti ti-camera" aria-hidden="true"></i><p>Tap to capture</p>';
+    vid.srcObject = stream; vid.className = 'active'; await vid.play();
+    document.getElementById('cam-trigger').innerHTML = '<i class="ti ti-camera"></i><p>Tap to capture</p>';
     document.getElementById('cam-trigger').onclick = capturePhoto;
-  } catch(e) {
-    capturing = false;
-    document.getElementById('cam-trigger').innerHTML = '<i class="ti ti-camera-off" aria-hidden="true"></i><p>Camera unavailable — check permissions</p>';
-  }
+  } catch(e) { capturing = false; document.getElementById('cam-trigger').innerHTML = '<i class="ti ti-camera-off"></i><p>Camera unavailable</p>'; }
 }
 
 function capturePhoto() {
-  const vid = document.getElementById('cam-feed');
-  const canvas = document.getElementById('cam-canvas');
+  const vid = document.getElementById('cam-feed'), canvas = document.getElementById('cam-canvas');
   canvas.width = vid.videoWidth; canvas.height = vid.videoHeight;
   canvas.getContext('2d').drawImage(vid, 0, 0);
   canvas.toBlob(blob => {
     state.photoBlob = blob;
-    state.photoPreviewUrl = URL.createObjectURL(blob);
     const prev = document.getElementById('photo-preview');
-    prev.src = state.photoPreviewUrl; prev.style.display = 'block';
+    prev.src = URL.createObjectURL(blob); prev.style.display = 'block';
     document.getElementById('cam-trigger').style.display = 'none';
-    updateProgress();
+    updateProg();
   }, 'image/jpeg', 0.75);
   stopCamera();
 }
 
 function stopCamera() {
   if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-  const vid = document.getElementById('cam-feed');
-  vid.className = ''; vid.srcObject = null;
+  const vid = document.getElementById('cam-feed'); vid.className = ''; vid.srcObject = null;
   capturing = false;
 }
 
-// ── SUBMIT ───────────────────────────────────────────────────
-document.getElementById('submit-btn').onclick = async () => {
-  const btn = document.getElementById('submit-btn');
+document.getElementById('visit-submit').onclick = async () => {
+  const btn = document.getElementById('visit-submit');
   btn.disabled = true; btn.textContent = 'Saving…';
-  document.getElementById('submit-error').innerHTML = '';
-
+  document.getElementById('visit-error').innerHTML = '';
   try {
-    // 1. Upload photo to Supabase Storage (if taken)
     let photoUrl = null;
     if (state.photoBlob) {
-      const fileName = `${state.rep.id}/${state.selectedClinic.id}/${Date.now()}.jpg`;
-      const { data: upData, error: upErr } = await sb.storage
-        .from('wellnest-photos')
-        .upload(fileName, state.photoBlob, { contentType: 'image/jpeg', upsert: false });
+      const fileName = `${state.rep.id}/${state.selectedLead.id}/${Date.now()}.jpg`;
+      const { error: upErr } = await sb.storage.from('wellnest-photos').upload(fileName, state.photoBlob, { contentType: 'image/jpeg' });
       if (upErr) throw new Error('Photo upload failed: ' + upErr.message);
-      const { data: urlData } = sb.storage.from('wellnest-photos').getPublicUrl(fileName);
-      photoUrl = urlData.publicUrl;
+      photoUrl = sb.storage.from('wellnest-photos').getPublicUrl(fileName).data.publicUrl;
     }
-
-    // 2. Insert visit row
-    const radio = name => document.querySelector(`input[name="${name}"]:checked`)?.value || null;
-    const get   = id   => document.getElementById(id).value.trim() || null;
-
-    const { error: insErr } = await sb.from('wellnest_visits').insert({
-      clinic_id:           state.selectedClinic.id,
-      rep_id:              state.rep.id,
-      rep_name:            state.rep.name,
-      clinic_name:         state.selectedClinic.name,
-      contact_name:        get('q-contact'),
-      contact_title:       get('q-title'),
-      visit_type:          radio('q-vtype'),
-      pipeline_status:     get('q-pipeline') || null,
-      receptiveness:       radio('q-rec'),
-      collateral_left:     radio('q-coll'),
-      open_to_luncheon:    radio('q-lunch'),
-      currently_referring: radio('q-ref'),
-      follow_up_needed:    radio('q-fu'),
-      notes:               get('q-next'),
-      gps_lat:             state.geoCoords?.lat || null,
-      gps_lng:             state.geoCoords?.lng || null,
-      gps_accuracy_m:      state.geoCoords?.acc || null,
-      photo_url:           photoUrl,
+    const radio = n => document.querySelector(`input[name="${n}"]:checked`)?.value || null;
+    const get   = id => document.getElementById(id).value.trim() || null;
+    const { error } = await sb.from('wellnest_visits').insert({
+      clinic_id: state.selectedLead.id, rep_id: state.rep.id,
+      rep_name: state.rep.name, clinic_name: state.selectedLead.name,
+      contact_name: get('q-contact'), contact_title: get('q-title'),
+      visit_type: radio('q-vtype'), pipeline_status: get('q-pipeline'),
+      receptiveness: radio('q-rec'), collateral_left: radio('q-coll'),
+      open_to_luncheon: radio('q-lunch'), currently_referring: radio('q-ref'),
+      follow_up_needed: radio('q-fu'), notes: get('q-notes'),
+      gps_lat: state.geoCoords?.lat || null, gps_lng: state.geoCoords?.lng || null,
+      gps_accuracy_m: state.geoCoords?.acc || null, photo_url: photoUrl,
     });
-    if (insErr) throw new Error('Save failed: ' + insErr.message);
+    if (error) throw new Error('Save failed: ' + error.message);
 
-    // 3. Refresh visited map for this clinic
-    const { data: fresh } = await sb.from('wellnest_visits')
-      .select('*').eq('clinic_id', state.selectedClinic.id).eq('rep_id', state.rep.id)
+    const { data: fresh } = await sb.from('wellnest_visits').select('*')
+      .eq('clinic_id', state.selectedLead.id).eq('rep_id', state.rep.id)
       .order('visit_date', { ascending: false }).limit(1);
-    if (fresh?.[0]) state.visitedMap[state.selectedClinic.id] = fresh[0];
+    if (fresh?.[0]) state.visitedMap[state.selectedLead.id] = fresh[0];
 
-    // 4. Show confirmation
     stopCamera();
-    document.getElementById('conf-name').textContent = state.selectedClinic.name;
+    document.getElementById('conf-name').textContent = state.selectedLead.name;
     const rows = [
-      ['Rep', state.rep.name],
-      ['Contact', get('q-contact') || '—'],
-      ['Visit type', radio('q-vtype') || '—'],
-      ['Pipeline', get('q-pipeline') || '—'],
-      ['Receptiveness', radio('q-rec') || '—'],
-      ['Follow-up', radio('q-fu') || '—'],
+      ['Rep', state.rep.name], ['Contact', get('q-contact') || '—'],
+      ['Visit type', radio('q-vtype') || '—'], ['Pipeline', get('q-pipeline') || '—'],
+      ['Receptiveness', radio('q-rec') || '—'], ['Follow-up', radio('q-fu') || '—'],
       ['GPS', state.geoCoords ? `${state.geoCoords.lat.toFixed(5)}, ${state.geoCoords.lng.toFixed(5)}` : 'Not captured'],
-      ['Photo', photoUrl ? 'Uploaded' : 'Not taken'],
-      ['Saved', new Date().toLocaleString()],
+      ['Photo', photoUrl ? 'Uploaded' : 'Not taken'], ['Saved', new Date().toLocaleString()],
     ];
     document.getElementById('conf-summary').innerHTML =
       `<div class="summary-card">${rows.map(([k,v]) => `<div class="sum-row"><span class="sum-k">${k}</span><span class="sum-v">${v}</span></div>`).join('')}</div>`;
-    setScreen('s-confirm', 'Visit logged', true);
-
+    setScreen('s-confirm', 'Visit logged', false);
   } catch(e) {
-    document.getElementById('submit-error').innerHTML = `<div class="error-msg">${e.message}</div>`;
-  } finally {
-    btn.disabled = false; btn.textContent = 'Submit visit';
-  }
+    document.getElementById('visit-error').innerHTML = `<div class="error-msg">${e.message}</div>`;
+  } finally { btn.disabled = false; btn.textContent = 'Submit visit'; }
 };
 
-document.getElementById('back-home').onclick = () => { renderList(); setScreen('s-list', 'Clinics', true); };
+document.getElementById('conf-home').onclick = () => setScreen('s-home', 'Home', false);
 
 // ── START ────────────────────────────────────────────────────
-init();
+initReps();
 </script>
 </body>
 </html>
